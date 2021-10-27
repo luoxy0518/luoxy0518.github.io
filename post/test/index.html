@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='（三）webpack配置vue2/3 初始化webpack包环境 mkdir vue-webpack-demo npm init -y yarn add webpack@4.44.2 webpack-cli@3.3.12 webpack-dev-server@3.11.2 -D // package.json 修改yarn run dev对应的node命令 &amp;quot;scripts&amp;quot;: { &amp;quot;dev&amp;quot;: &amp;quot;webpack-dev-server&amp;quot;, } 建立入口文件，出口文件  建立src/main.js文件作为入口文件 建立public/index.html文件作为模板文件，嵌入vue cdn  &amp;lt;!-public/index.html-!&amp;gt; &amp;lt;!doctype html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;meta name=&amp;#34;viewport&amp;#34; content=&amp;#34;width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0&amp;#34;&amp;gt; &amp;lt;meta http-equiv=&amp;#34;X-UA-Compatible&amp;#34; content=&amp;#34;ie=edge&amp;#34;&amp;gt; &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;div id=&amp;#34;root&amp;#34;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;script src=&amp;#34;https://cdn.bootcdn.net/ajax/libs/vue/3.2.0-beta.7/vue.cjs.min.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 安装vue有关包 // vue3版本 yarn add vue-loader@next @vue/compiler-sfc vue-template-compiler html-webpack-plugin@4.5.0 -D vue2版本需要降低vue-loader版本，上述配置支持vue3。测试项目可以自己搭建webpack，生产环境建议使用脚手架工具。
+ vue2: npm i vue-loader -D vue3: npm i vue-loader@next -D  配置webpack.'><title></title>
+
+<link rel='canonical' href='https://luoxy0518.github.io/post/test/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content=''>
+<meta property='og:description' content='（三）webpack配置vue2/3 初始化webpack包环境 mkdir vue-webpack-demo npm init -y yarn add webpack@4.44.2 webpack-cli@3.3.12 webpack-dev-server@3.11.2 -D // package.json 修改yarn run dev对应的node命令 &amp;quot;scripts&amp;quot;: { &amp;quot;dev&amp;quot;: &amp;quot;webpack-dev-server&amp;quot;, } 建立入口文件，出口文件  建立src/main.js文件作为入口文件 建立public/index.html文件作为模板文件，嵌入vue cdn  &amp;lt;!-public/index.html-!&amp;gt; &amp;lt;!doctype html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;meta name=&amp;#34;viewport&amp;#34; content=&amp;#34;width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0&amp;#34;&amp;gt; &amp;lt;meta http-equiv=&amp;#34;X-UA-Compatible&amp;#34; content=&amp;#34;ie=edge&amp;#34;&amp;gt; &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;div id=&amp;#34;root&amp;#34;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;script src=&amp;#34;https://cdn.bootcdn.net/ajax/libs/vue/3.2.0-beta.7/vue.cjs.min.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 安装vue有关包 // vue3版本 yarn add vue-loader@next @vue/compiler-sfc vue-template-compiler html-webpack-plugin@4.5.0 -D vue2版本需要降低vue-loader版本，上述配置支持vue3。测试项目可以自己搭建webpack，生产环境建议使用脚手架工具。
+ vue2: npm i vue-loader -D vue3: npm i vue-loader@next -D  配置webpack.'>
+<meta property='og:url' content='https://luoxy0518.github.io/post/test/'>
+<meta property='og:site_name' content='臭屁泽泽的博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' />
+<meta name="twitter:title" content="">
+<meta name="twitter:description" content="（三）webpack配置vue2/3 初始化webpack包环境 mkdir vue-webpack-demo npm init -y yarn add webpack@4.44.2 webpack-cli@3.3.12 webpack-dev-server@3.11.2 -D // package.json 修改yarn run dev对应的node命令 &amp;quot;scripts&amp;quot;: { &amp;quot;dev&amp;quot;: &amp;quot;webpack-dev-server&amp;quot;, } 建立入口文件，出口文件  建立src/main.js文件作为入口文件 建立public/index.html文件作为模板文件，嵌入vue cdn  &amp;lt;!-public/index.html-!&amp;gt; &amp;lt;!doctype html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;meta name=&amp;#34;viewport&amp;#34; content=&amp;#34;width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0&amp;#34;&amp;gt; &amp;lt;meta http-equiv=&amp;#34;X-UA-Compatible&amp;#34; content=&amp;#34;ie=edge&amp;#34;&amp;gt; &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;div id=&amp;#34;root&amp;#34;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;script src=&amp;#34;https://cdn.bootcdn.net/ajax/libs/vue/3.2.0-beta.7/vue.cjs.min.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 安装vue有关包 // vue3版本 yarn add vue-loader@next @vue/compiler-sfc vue-template-compiler html-webpack-plugin@4.5.0 -D vue2版本需要降低vue-loader版本，上述配置支持vue3。测试项目可以自己搭建webpack，生产环境建议使用脚手架工具。
+ vue2: npm i vue-loader -D vue3: npm i vue-loader@next -D  配置webpack.">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="/post/test/"></a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    6 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="三webpack配置vue23">（三）webpack配置vue2/3</h2>
+<h4 id="初始化webpack包环境">初始化webpack包环境</h4>
+<pre tabindex="0"><code>mkdir vue-webpack-demo 
+npm init -y
+yarn add webpack@4.44.2 webpack-cli@3.3.12 webpack-dev-server@3.11.2 -D
+</code></pre><pre tabindex="0"><code>// package.json 修改yarn run dev对应的node命令
+&quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;webpack-dev-server&quot;,
+}
+</code></pre><h4 id="建立入口文件出口文件">建立入口文件，出口文件</h4>
+<ul>
+<li>建立<code>src/main.js</code>文件作为入口文件</li>
+<li>建立<code>public/index.html</code>文件作为模板文件，嵌入<code>vue cdn</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!-public/index.html-!&gt;</span>
+
+<span style="color:#75715e">&lt;!doctype html&gt;</span>
+&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
+    &lt;<span style="color:#f92672">head</span>&gt;
+        &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>&gt;
+            &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;viewport&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0&#34;</span>&gt;
+                &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">http-equiv</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;X-UA-Compatible&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ie=edge&#34;</span>&gt;
+                    &lt;<span style="color:#f92672">title</span>&gt;Document&lt;/<span style="color:#f92672">title</span>&gt;
+    &lt;/<span style="color:#f92672">head</span>&gt;
+    &lt;<span style="color:#f92672">body</span>&gt;
+        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;root&#34;</span>&gt;&lt;/<span style="color:#f92672">div</span>&gt;
+        &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.bootcdn.net/ajax/libs/vue/3.2.0-beta.7/vue.cjs.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+    &lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+
+</code></pre></div><h4 id="安装vue有关包">安装vue有关包</h4>
+<pre tabindex="0"><code>// vue3版本
+yarn add vue-loader@next @vue/compiler-sfc vue-template-compiler html-webpack-plugin@4.5.0 -D
+</code></pre><p><code>vue2</code>版本需要降低<code>vue-loader</code>版本，上述配置支持<code>vue3</code>。测试项目可以自己搭建<code>webpack</code>，生产环境建议使用脚手架工具。</p>
+<ul>
+<li><code>vue2</code>: <code>npm i vue-loader -D</code></li>
+<li><code>vue3</code>: <code>npm i vue-loader@next -D</code></li>
+</ul>
+<h4 id="配置webpackconfigjs文件">配置webpack.config.js文件</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// node提供,可以将相对路径转换为绝对路径 __dirname为当前文件位置路径
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">path</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;path&#39;</span>); 
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">HtmlWebpackPlugin</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;html-webpack-plugin&#39;</span>);
+<span style="color:#66d9ef">const</span> {<span style="color:#a6e22e">VueLoaderPlugin</span>} <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;vue-loader&#39;</span>);
+
+<span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">mode</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;development&#39;</span>,
+    <span style="color:#a6e22e">entry</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">path</span>.<span style="color:#a6e22e">resolve</span>(<span style="color:#ae81ff">__</span><span style="color:#a6e22e">dirname</span>, <span style="color:#e6db74">&#39;src/main.js&#39;</span>),
+    <span style="color:#a6e22e">output</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">path</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">path</span>.<span style="color:#a6e22e">resolve</span>(<span style="color:#ae81ff">__</span><span style="color:#a6e22e">dirname</span>, <span style="color:#e6db74">&#39;dist&#39;</span>),
+        <span style="color:#a6e22e">filename</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;[name][hash].js&#34;</span>
+    },
+    <span style="color:#a6e22e">externals</span><span style="color:#f92672">:</span> {
+        <span style="color:#e6db74">&#39;vue&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Vue&#39;</span>
+    },
+    <span style="color:#a6e22e">devtool</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;source-map&#34;</span>,
+    <span style="color:#a6e22e">module</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">rules</span><span style="color:#f92672">:</span> [{
+            <span style="color:#a6e22e">test</span><span style="color:#f92672">:</span> <span style="color:#e6db74">/\.vue$/</span>,
+            <span style="color:#a6e22e">loader</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;vue-loader&#34;</span>
+        }]
+    },
+    <span style="color:#a6e22e">plugins</span><span style="color:#f92672">:</span> [
+        <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">VueLoaderPlugin</span>(),
+        <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HtmlWebpackPlugin</span>({<span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">path</span>.<span style="color:#a6e22e">resolve</span>(<span style="color:#ae81ff">__</span><span style="color:#a6e22e">dirname</span>, <span style="color:#e6db74">&#39;public/index.html&#39;</span>)}),
+    ]
+}
+</code></pre></div><h4 id="使用-yarn-dev-启动">使用 yarn dev 启动</h4>
+<h2 id="四初识vue">（四）初识vue</h2>
+<h3 id="vue核心思想">vue核心思想</h3>
+<p><code>vue</code>核心思想是对模板语法进行编译，渲染<code>DOM</code>。
+<code>vue</code>将数据与<code>DOM</code>进行关联，并建立响应式关系。所谓响应式，就是数据改变，视图改变。 数据 =&gt; <code>viewModel</code>核心库 =&gt; 视图。</p>
+<ul>
+<li><code>template</code>：组件模板</li>
+<li><code>script</code>: 组件逻辑模块。组件逻辑的本质是一个对象，其中含有了很多特定的属性。</li>
+<li><code>style</code>: 组件样式</li>
+</ul>
+<h4 id="双向绑定与react的区别">双向绑定与<code>react</code>的区别</h4>
+<p><code>vue</code>支持视图驱动数据发生改变。<code>React</code>不支持，<code>React</code>必须使用事件驱动更改<code>state</code>从而触发视图的更新。
+如果不看<code>v-model</code>，<code>vue</code>也可以被称为单向数据流。<code>vue</code>完成了数据双向绑定的机制，使我们的关注点可以完全专注于业务逻辑层，视图层交给<code>viewModel</code>库完成数据绑定、渲染和更新。</p>
+<h3 id="vue简单使用示例">vue简单使用示例</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!doctype html&gt;</span>
+&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
+&lt;<span style="color:#f92672">head</span>&gt;
+    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>&gt;
+    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;viewport&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0&#34;</span>&gt;
+    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">http-equiv</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;X-UA-Compatible&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ie=edge&#34;</span>&gt;
+    &lt;<span style="color:#f92672">title</span>&gt;Document&lt;/<span style="color:#f92672">title</span>&gt;
+&lt;/<span style="color:#f92672">head</span>&gt;
+&lt;<span style="color:#f92672">body</span>&gt;
+    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;root&#34;</span>&gt;
+        &lt;<span style="color:#f92672">div</span>&gt;{{title}}&lt;/<span style="color:#f92672">div</span>&gt;
+        <span style="color:#75715e">&lt;!-- v-on:click 绑定点击事件，会被转换为addEventListener。可简写:@click=handleAddLike()--&gt;</span>
+        &lt;<span style="color:#f92672">div</span>&gt;Like: {{like}} &lt;<span style="color:#f92672">button</span> <span style="color:#a6e22e">v-on:click</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;handleAddLike&#34;</span>&gt;点赞&lt;/<span style="color:#f92672">button</span>&gt;&lt;/<span style="color:#f92672">div</span>&gt;
+        &lt;<span style="color:#f92672">div</span>&gt;
+            &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">v-if</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;isLogin&#34;</span>&gt;已登录&lt;/<span style="color:#f92672">span</span>&gt;
+            &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">v-else</span>&gt;未登录&lt;/<span style="color:#f92672">span</span>&gt;
+            &lt;<span style="color:#f92672">button</span> <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">click</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;toggleLoginStatus&#34;</span>&gt;切换登录状态&lt;/<span style="color:#f92672">button</span>&gt;
+        &lt;/<span style="color:#f92672">div</span>&gt;
+
+        <span style="color:#75715e">&lt;!-- v-bind 绑定属性，引号内部看作变量，vue 会对其进行解析 --&gt;</span>
+        &lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">:title</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;title&#34;</span>&gt;{{title}}&lt;/<span style="color:#f92672">p</span>&gt;
+
+        <span style="color:#75715e">&lt;!-- v-model 双向绑定表单控件 --&gt;</span>
+        &lt;<span style="color:#f92672">div</span>&gt;
+            {{inputVal}}
+            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text&#34;</span> <span style="color:#a6e22e">v-model</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;inputVal&#34;</span>/&gt;
+        &lt;/<span style="color:#f92672">div</span>&gt;
+
+        <span style="color:#75715e">&lt;!-- v-for 循环 --&gt;</span>
+        <span style="color:#75715e">&lt;!-- key of list 对象使用--&gt;</span>
+        <span style="color:#75715e">&lt;!-- key in list 数组使用--&gt;</span>
+        &lt;<span style="color:#f92672">ul</span>&gt;
+            &lt;<span style="color:#f92672">li</span> <span style="color:#a6e22e">v-for</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item of list&#34;</span> <span style="color:#a6e22e">:key</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item&#34;</span>&gt;{{item}}&lt;/<span style="color:#f92672">li</span>&gt;
+        &lt;/<span style="color:#f92672">ul</span>&gt;
+
+        &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">v-for</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;key in obj&#34;</span> <span style="color:#a6e22e">:key</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;key&#34;</span>&gt;{{key}}&lt;/<span style="color:#f92672">span</span>&gt;
+    &lt;/<span style="color:#f92672">div</span>&gt;
+    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/vue@3.1.2/dist/vue.global.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+&lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">Acticle</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">data</span>() {
+        <span style="color:#66d9ef">return</span> {
+            <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;This is a title&#39;</span>,
+            <span style="color:#a6e22e">like</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>,
+            <span style="color:#a6e22e">isLogin</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+            <span style="color:#a6e22e">inputVal</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;&#39;</span>,
+            <span style="color:#a6e22e">list</span><span style="color:#f92672">:</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>],
+            <span style="color:#a6e22e">obj</span><span style="color:#f92672">:</span> {<span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;lily&#39;</span>, <span style="color:#a6e22e">sex</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;男&#39;</span>, <span style="color:#a6e22e">age</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">12</span>}
+        }
+    },
+    <span style="color:#a6e22e">methods</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">handleAddLike</span>() {
+            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">like</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+        },
+        <span style="color:#a6e22e">toggleLoginStatus</span>() {
+            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">isLogin</span> <span style="color:#f92672">=</span> <span style="color:#f92672">!</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">isLogin</span>;
+        }
+    }
+}
+
+<span style="color:#a6e22e">Vue</span>.<span style="color:#a6e22e">createApp</span>(<span style="color:#a6e22e">Acticle</span>).<span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#39;#root&#39;</span>);
+</code></pre></div><h2 id="vue组件化构建">Vue组件化构建</h2>
+<p><code>vue</code>利用ES模块化，来完成<code>vue</code>的组件系统构建。
+组件化即抽象成小型、独立、可预先定义配置的、可复用的组件。</p>
+<ul>
+<li>小型：页面的构成拆分成一个一个的小单元独立开发。</li>
+<li>独立：每一个小单元尽可能都独立开发。</li>
+<li>预先定义：小单元都可以先定义好，在需要的时候导入使用。</li>
+<li>预先配置：小单元可以接收一些在使用的时候需要的配置。</li>
+<li>可复用：一个小单元可以在多个地方使用，</li>
+</ul>
+<p>可复用性要适当考量，组件最大的作用是独立开发、预先配置。目的是为了更好的维护和扩展，有些组件的确是不需要复用的，可配置性越高，功能就越强。</p>
+<p>组件嵌套形成组件树。</p>
+<h2 id="应用实例组件实例与根组件实例">应用实例、组件实例与根组件实例</h2>
+<h3 id="应用组件">应用组件</h3>
+<p><code>Vue.createApp()</code>返回一个应用实例。
+实例上暴露了很多方法，<strong>且大多数方法都会返回应用实例本身</strong>:</p>
+<ul>
+<li><code>component</code> 注册组件</li>
+<li><code>directive</code> 注册指令</li>
+<li><code>filter</code> 注册过滤器</li>
+<li><code>use</code> 使用插件</li>
+<li>&hellip;</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Vue</span>.<span style="color:#a6e22e">createApp</span>({}); <span style="color:#75715e">// application 应用
+</span></code></pre></div><h4 id="通过应用实例注册全局组件">通过应用实例注册全局组件</h4>
+<p>应用实例主要用来注册全局组件。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">//  创建应用实例
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Vue</span>.<span style="color:#a6e22e">createApp</span>({});
+<span style="color:#75715e">// 通过应用实例注册全局组件
+</span><span style="color:#75715e">// app.component()返回应用实例 app === app2,意味着可以链式调用
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app2</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">component</span>(<span style="color:#e6db74">&#39;MyTitle&#39;</span>, {
+    <span style="color:#a6e22e">data</span>() {
+        <span style="color:#66d9ef">return</span> {
+            <span style="color:#a6e22e">author</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;小李1&#39;</span>,
+            <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;VUEVUE&#39;</span>
+        }
+    },
+    <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">        &lt;div&gt;
+</span><span style="color:#e6db74">            {{ author}}
+</span><span style="color:#e6db74">            &lt;h1&gt;{{title}}&lt;/h1&gt;
+</span><span style="color:#e6db74">        &lt;/div&gt;
+</span><span style="color:#e6db74">    `</span>
+}).<span style="color:#a6e22e">directive</span>(<span style="color:#e6db74">&#39;toLowerCase&#39;</span>, {
+    <span style="color:#a6e22e">mounted</span>(<span style="color:#a6e22e">el</span>) {
+        <span style="color:#a6e22e">el</span>.<span style="color:#a6e22e">addEventListener</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
+            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">innerText</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">innerText</span>.<span style="color:#a6e22e">toLowerCase</span>();
+        }, <span style="color:#66d9ef">false</span>)
+    }
+});
+</code></pre></div><h3 id="根组件实例">根组件实例</h3>
+<p>根组件的本质就是一个对象。</p>
+<ul>
+<li>根组件： <code>createApp({})</code>执行的时候需要一个根组件，根组件是<code>vue</code>渲染的起点。</li>
+<li>根元素：<code>createApp()</code>创建应用实例时需要挂载到一个<code>HTML</code>根元素上。</li>
+</ul>
+<p><strong><code>app.mount()</code>返回根组件实例（<code>vm</code>），而不是应用实例。<code>vm</code>即<code>viewModel，MVVM =&gt; vm</code></strong>
+Vue 不是一个完整的 MVVM 模型，只是参考了 MVVM 模型。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">// index.html
+&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;app&#34;</span>&gt;&lt;/<span style="color:#f92672">div</span>&gt;
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">RootComponent</span> <span style="color:#f92672">=</span> {
+  <span style="color:#a6e22e">data</span> () {
+    <span style="color:#66d9ef">return</span> {
+      <span style="color:#a6e22e">a</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+      <span style="color:#a6e22e">b</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+      <span style="color:#a6e22e">total</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>
+    }
+  },
+  <span style="color:#a6e22e">mounted</span> () {
+  	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">plus</span>();
+  },
+  <span style="color:#a6e22e">methods</span><span style="color:#f92672">:</span> {
+    <span style="color:#a6e22e">plus</span> () {
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">total</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">a</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">b</span>;
+    }
+  },
+  <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`&lt;h1&gt;{{ a }} + {{ b }} = {{ total }}&lt;/h1&gt;`</span>
+}
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Vue</span>.<span style="color:#a6e22e">createApp</span>(<span style="color:#a6e22e">RootComponent</span>);
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vm</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#39;#app&#39;</span>);
+</code></pre></div><h3 id="组件实例">组件实例</h3>
+<p>每个组件都有自己的组件实例，一个应用中所有的组件都共享一个应用实例。
+无论是根组件还是应用内其他的组件，配置选项、组件行为都是一样的。
+组件实例可以添加一些属性 <code>property</code>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">MyTitle</span> <span style="color:#f92672">=</span> {
+  <span style="color:#a6e22e">props</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;content&#39;</span>],
+  <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">		&lt;h1 :title=&#34;content&#34;&gt;
+</span><span style="color:#e6db74">			&lt;slot&gt;&lt;/slot&gt;
+</span><span style="color:#e6db74">		&lt;/h1&gt;
+</span><span style="color:#e6db74">	`</span>
+}
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">MyAuthor</span> <span style="color:#f92672">=</span> {
+  <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">		&lt;p&gt;
+</span><span style="color:#e6db74">			Author: &lt;slot&gt;&lt;/slot&gt;
+</span><span style="color:#e6db74">    &lt;/p&gt;
+</span><span style="color:#e6db74">	`</span>
+}
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">MyContent</span> <span style="color:#f92672">=</span> {
+  <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">		&lt;p&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/p&gt;
+</span><span style="color:#e6db74">	`</span>
+}
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">App</span> <span style="color:#f92672">=</span> {
+  <span style="color:#a6e22e">components</span><span style="color:#f92672">:</span> {
+  	<span style="color:#a6e22e">MyTitle</span>,
+    <span style="color:#a6e22e">MyAuthor</span>,
+    <span style="color:#a6e22e">MyContent</span>
+  },
+  <span style="color:#a6e22e">data</span> () {
+    <span style="color:#66d9ef">return</span> {
+      <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;This is a Title&#39;</span>,
+      <span style="color:#a6e22e">author</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;yueluo&#39;</span>,
+      <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;This is a Content&#39;</span>
+    }
+  },
+  <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">		&lt;div&gt;
+</span><span style="color:#e6db74">			&lt;my-title :content=&#34;content&#34;&gt;{{ title }}&lt;/my-title&gt;
+</span><span style="color:#e6db74">			&lt;my-author&gt;{{ author }}&lt;/my-author&gt;
+</span><span style="color:#e6db74">            &lt;my-content&gt;{{ content }}&lt;/my-content&gt;
+</span><span style="color:#e6db74">		&lt;/div&gt;
+</span><span style="color:#e6db74">	`</span>
+}
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Vue</span>.<span style="color:#a6e22e">createApp</span>(<span style="color:#a6e22e">App</span>);
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vm</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#39;#app&#39;</span>);
+
+<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">vm</span>);
+</code></pre></div><h2 id="认识及实现mvc">认识及实现MVC</h2>
+<h3 id="mvc">MVC</h3>
+<p><code>MVC</code>实际上是<code>MVVVM</code>的雏形，<code>MVVM</code>解决了驱动不内聚、不集中，解决了视图和模型完全隔离的桩体</p>
+<h4 id="后端mvc">后端MVC</h4>
+<ul>
+<li><code>Model（M）</code>数据模型层。操作数据库（对数据进行增删改查的操作）</li>
+<li><code>View（V）</code>视图层。显示视图或者模板（服务端渲染时存在V）</li>
+<li><code>Controller（C）</code>控制器，逻辑层。将数据与视图关联挂载，有一些基础逻辑操作。也可以充当<code>API</code>层，前端请求接口时对应的就是后端的<code>controller</code>层。</li>
+</ul>
+<blockquote>
+<p>后端渲染
+前端异步请求<code>URL</code>（<code>controller</code>中的一个方法），通过<code>Model</code>层的方法，操作数据库获取数据，返回给控制器方法，响应回前端。</p>
+</blockquote>
+<h4 id="前端mvc">前端MVC</h4>
+<ul>
+<li><code>Model(M)</code>数据层。管理视图所需要数据，数据关联，数据与视图关联</li>
+<li><code>View（V）</code>视图层。管理<code>HTML</code>模板和视图渲染</li>
+<li><code>Controller</code>逻辑层。管理事件逻辑</li>
+</ul>
+<blockquote>
+<p>前端渲染
+<code>View</code>需要数据调用<code>controller</code>控制器中对应的方法，从<code>Model</code>中调用方法获取数据，返回给控制器再<code>render</code>到视图中。</p>
+</blockquote>
+<h3 id="手写实现mvc">手写实现MVC</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// 利用MVC模式写一个计算器，具有加减乘除的功能
+</span><span style="color:#75715e">// 模块化
+</span><span style="color:#75715e"></span><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Model:       1. 储存数据  2.绑定数据和视图关联关系
+</span><span style="color:#75715e"> * View:        1.html模板  2.渲染模板
+</span><span style="color:#75715e"> * Controller:  1.管理事件逻辑
+</span><span style="color:#75715e"> */</span>
+(<span style="color:#66d9ef">function</span> () {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">Model</span> <span style="color:#f92672">=</span> {
+        <span style="color:#a6e22e">data</span><span style="color:#f92672">:</span> {
+            <span style="color:#a6e22e">a</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>,
+            <span style="color:#a6e22e">b</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>,
+            <span style="color:#a6e22e">r</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>,
+            <span style="color:#a6e22e">symbol</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;+&#39;</span>,
+        },
+        <span style="color:#a6e22e">init</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> () {
+            <span style="color:#66d9ef">const</span> <span style="color:#ae81ff">_</span><span style="color:#a6e22e">that</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>;
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">_</span><span style="color:#a6e22e">that</span>.<span style="color:#a6e22e">data</span>) {
+                Object.<span style="color:#a6e22e">defineProperty</span>(<span style="color:#a6e22e">Model</span>, <span style="color:#a6e22e">key</span>, {
+                    <span style="color:#a6e22e">get</span>() {
+                        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">_</span><span style="color:#a6e22e">that</span>.<span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">key</span>];
+                    },
+                    <span style="color:#a6e22e">set</span>(<span style="color:#a6e22e">val</span>) {
+                        <span style="color:#ae81ff">_</span><span style="color:#a6e22e">that</span>.<span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">key</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">val</span>;
+
+                        <span style="color:#a6e22e">View</span>.<span style="color:#a6e22e">render</span>({[<span style="color:#a6e22e">key</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">val</span>});
+                    }
+                })
+            }
+        }
+    }
+
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">View</span> <span style="color:#f92672">=</span> {
+        <span style="color:#a6e22e">el</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;root&#39;</span>,
+        <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">                &lt;div&gt;
+</span><span style="color:#e6db74">                    &lt;input class=&#34;cal a&#34;/&gt; 
+</span><span style="color:#e6db74">                &lt;/div&gt;
+</span><span style="color:#e6db74">                &lt;div&gt;
+</span><span style="color:#e6db74">                    &lt;input class=&#34;cal b&#34;/&gt; 
+</span><span style="color:#e6db74">                &lt;/div&gt;
+</span><span style="color:#e6db74">                &lt;div&gt;
+</span><span style="color:#e6db74">                    &lt;span class=&#34;res-a&#34;&gt;{{a}}&lt;/span&gt; 
+</span><span style="color:#e6db74">                    &lt;span class=&#34;res-symbol&#34;&gt;{{symbol}}&lt;/span&gt; 
+</span><span style="color:#e6db74">                    &lt;span class=&#34;res-b&#34;&gt;{{b}}&lt;/span&gt; = 
+</span><span style="color:#e6db74">                    &lt;span class=&#34;res-r&#34;&gt;{{r}}&lt;/span&gt;
+</span><span style="color:#e6db74">                &lt;/div&gt;
+</span><span style="color:#e6db74">                &lt;div class=&#34;btn-group&#34;&gt;
+</span><span style="color:#e6db74">                    &lt;button&gt;+&lt;/button&gt;
+</span><span style="color:#e6db74">                    &lt;button&gt;-&lt;/button&gt;
+</span><span style="color:#e6db74">                    &lt;button&gt;*&lt;/button&gt;
+</span><span style="color:#e6db74">                    &lt;button&gt;/&lt;/button&gt;
+</span><span style="color:#e6db74">                &lt;/div&gt;
+</span><span style="color:#e6db74">        `</span>,
+        <span style="color:#a6e22e">render</span>(<span style="color:#a6e22e">mutedData</span>) {
+            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">mutedData</span>) {
+                <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">in</span> <span style="color:#a6e22e">mutedData</span>) {
+                    document.<span style="color:#a6e22e">querySelector</span>(<span style="color:#e6db74">`.res-</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">key</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>).<span style="color:#a6e22e">innerHTML</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">mutedData</span>[<span style="color:#a6e22e">key</span>];
+                }
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">template</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">template</span>.<span style="color:#a6e22e">replace</span>(
+                    <span style="color:#e6db74">/\{\{(.*?)\}\}/g</span>,
+                    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">node</span>, <span style="color:#a6e22e">key</span>) {
+                        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Model</span>[<span style="color:#a6e22e">key</span>.<span style="color:#a6e22e">trim</span>()];
+                    }
+                );
+
+                <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">div</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#39;div&#39;</span>);
+                <span style="color:#a6e22e">div</span>.<span style="color:#a6e22e">innerHTML</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">template</span>;
+                document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">el</span>).<span style="color:#a6e22e">appendChild</span>(<span style="color:#a6e22e">div</span>);
+            }
+        }
+    }
+
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">Controller</span> <span style="color:#f92672">=</span> {
+        <span style="color:#a6e22e">init</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> () {
+            document.<span style="color:#a6e22e">querySelectorAll</span>(<span style="color:#e6db74">&#39;.cal&#39;</span>).<span style="color:#a6e22e">forEach</span>(<span style="color:#a6e22e">item</span> =&gt; {
+                <span style="color:#a6e22e">addEventListener</span>(<span style="color:#e6db74">&#39;input&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">e</span>) {
+                    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">key</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">target</span>.<span style="color:#a6e22e">className</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39; &#39;</span>)[<span style="color:#ae81ff">1</span>];
+                    <span style="color:#a6e22e">Model</span>[<span style="color:#a6e22e">key</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">target</span>.<span style="color:#a6e22e">value</span>;
+                    <span style="color:#a6e22e">Model</span>.<span style="color:#a6e22e">r</span> <span style="color:#f92672">=</span>  eval(<span style="color:#e6db74">&#39;Number(Model.a)&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">Model</span>.<span style="color:#a6e22e">symbol</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;Number(Model.b)&#39;</span>);
+                }, <span style="color:#66d9ef">false</span>);
+            });
+
+            document.<span style="color:#a6e22e">getElementsByClassName</span>(<span style="color:#e6db74">&#39;btn-group&#39;</span>)[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">addEventListener</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">e</span>) {
+                <span style="color:#a6e22e">Model</span>.<span style="color:#a6e22e">symbol</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">target</span>.<span style="color:#a6e22e">textContent</span>;
+                <span style="color:#a6e22e">Model</span>.<span style="color:#a6e22e">r</span> <span style="color:#f92672">=</span>  eval(<span style="color:#e6db74">&#39;Number(Model.a)&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">Model</span>.<span style="color:#a6e22e">symbol</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;Number(Model.b)&#39;</span>);
+            });
+        }
+    }
+
+    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">init</span>() {
+        <span style="color:#a6e22e">Model</span>.<span style="color:#a6e22e">init</span>();
+        <span style="color:#a6e22e">View</span>.<span style="color:#a6e22e">render</span>();
+        <span style="color:#a6e22e">Controller</span>.<span style="color:#a6e22e">init</span>();
+    }
+
+    <span style="color:#a6e22e">init</span>();
+
+})();
+</code></pre></div><h2 id="认识mustache与vue编译">认识Mustache与Vue编译</h2>
+<h3 id="模板语法">模板语法</h3>
+<p><code>template</code>内的<code>HTML</code>字符串，存在<code>vue</code>特性，比如文本、表达式、属性、指令。
+<code>Vue</code>的模板都是基于<code>HTML</code>，模板中直接写<code>HTML</code>都是可以被<code>HTML</code>解析器解析的。
+<code>Vue</code>提供了一套模板编译系统，可以将<code>HTML</code>字符串转换为<code>AST</code>树，然后再形成虚拟节点，进行渲染。</p>
+<h3 id="插值表达式">插值表达式</h3>
+<p><code>{{}}</code>为插值表达式。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">createApp</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;vue&#39;</span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">App</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">data</span>(){
+        <span style="color:#66d9ef">return</span> {
+            <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;this is vue program&#39;</span>
+        }
+    },
+    <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span><span style="color:#e6db74">`
+</span><span style="color:#e6db74">      &lt;div&gt;
+</span><span style="color:#e6db74">        &lt;p&gt;{{title}}&lt;/p&gt;
+</span><span style="color:#e6db74">      &lt;/div&gt;
+</span><span style="color:#e6db74">    `</span>
+}
+<span style="color:#a6e22e">createApp</span>(<span style="color:#a6e22e">App</span>).<span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#39;#app&#39;</span>)
+
+</code></pre></div><h3 id="mustache解析插值表达式库">Mustache解析插值表达式库</h3>
+<p><code>Mustache</code>库提供了用更少的逻辑处理模板渲染的能力，<a class="link" href="https://github.com/janl/mustache.js"  target="_blank" rel="noopener"
+    ><code>GitHub</code>地址</a>
+<code>vue</code>在处理插值表达式时参考了其实现，但是内部没有使用该库，<code>vue</code>具有自己的模板编译系统。</p>
+<h4 id="使用mustache库">使用Mustache库</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">Mustache</span> <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;mustache&#39;</span>;
+
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;this is vue program&#39;</span>,
+    <span style="color:#a6e22e">a</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;1&#39;</span>
+}
+
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">html</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Mustache</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">`&lt;p&gt;{{title}}&lt;/p&gt;`</span>, <span style="color:#a6e22e">data</span>);
+
+document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#39;app&#39;</span>).<span style="color:#a6e22e">innerHTML</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">html</span>;
+</code></pre></div><h4 id="编写组件">编写组件</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">createApp</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;vue&#39;</span>
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">App</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">data</span>(){
+        <span style="color:#66d9ef">return</span> {
+            <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;this is vue program&#39;</span>
+        }
+    },
+    <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span><span style="color:#e6db74">`
+</span><span style="color:#e6db74">      &lt;div&gt;
+</span><span style="color:#e6db74">        &lt;p&gt;{{title}}&lt;/p&gt;
+</span><span style="color:#e6db74">      &lt;/div&gt;
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    `</span>
+}
+<span style="color:#a6e22e">createApp</span>(<span style="color:#a6e22e">App</span>).<span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#39;#app&#39;</span>)
+</code></pre></div><h4 id="使用h渲染函数编写组件">使用h渲染函数编写组件</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">import</span> {<span style="color:#a6e22e">h</span>, <span style="color:#a6e22e">createApp</span>} <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;vue&#39;</span>;
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">App</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">data</span>() {
+        <span style="color:#66d9ef">return</span> {
+            <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;标题&#39;</span>,
+            <span style="color:#a6e22e">date</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;2021-20-11&#39;</span>
+        }
+    },
+    <span style="color:#a6e22e">render</span><span style="color:#f92672">:</span> () =&gt; {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">h</span>(
+            <span style="color:#e6db74">&#39;div&#39;</span>,
+            {},
+            [
+                <span style="color:#a6e22e">h</span>(<span style="color:#e6db74">&#39;p&#39;</span>, {}, <span style="color:#e6db74">&#39;1111&#39;</span>),
+
+            ])
+    }
+};
+
+<span style="color:#a6e22e">createApp</span>(<span style="color:#a6e22e">App</span>).<span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#39;#app&#39;</span>)
+</code></pre></div><h2 id="认识vue内部指令">认识Vue内部指令</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">createApp</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;vue/dist/vue.esm-bundler&#39;</span>
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">Title</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">props</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> String
+    },
+    <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">      &lt;h1&gt;{{ title }}&lt;/h1&gt;
+</span><span style="color:#e6db74">    `</span>
+}
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">App</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">components</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">Title</span>
+    },
+    <span style="color:#a6e22e">data</span>() {
+        <span style="color:#66d9ef">return</span> {
+            <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;This is my title&#39;</span>,
+            <span style="color:#a6e22e">author</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;xiaoye&#39;</span>,
+            <span style="color:#a6e22e">dateTime</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">new</span> Date(),
+            <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;This is my content&#39;</span>
+        }
+    },
+    <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">      &lt;div&gt;
+</span><span style="color:#e6db74">      &lt;Title :title=&#34;title&#34;/&gt;
+</span><span style="color:#e6db74">      &lt;p&gt;
+</span><span style="color:#e6db74">        &lt;span class=&#34;author&#34;&gt;{{ author }}&lt;/span&gt; - {{ dateTime }}
+</span><span style="color:#e6db74">      &lt;/p&gt;
+</span><span style="color:#e6db74">      &lt;p :title=&#34;content&#34;&gt;
+</span><span style="color:#e6db74">        {{ content }}
+</span><span style="color:#e6db74">      &lt;/p&gt;
+</span><span style="color:#e6db74">      &lt;button @click=&#34;changeTitle&#34;&gt;Change Title&lt;/button&gt;
+</span><span style="color:#e6db74">      &lt;/div&gt;
+</span><span style="color:#e6db74">    `</span>,
+    <span style="color:#a6e22e">methods</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">changeTitle</span>() {
+            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">title</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;This is App title&#34;</span>;
+        }
+    },
+}
+
+<span style="color:#a6e22e">createApp</span>(<span style="color:#a6e22e">App</span>).<span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#39;#app&#39;</span>);
+</code></pre></div><h3 id="指令概念">指令概念</h3>
+<p><code>directive</code>指令：在所有<code>vue</code>中，模板上的属性<code>v-</code>都是指令。
+<code>vue</code>提供了大量的内置指令，<code>v-if</code>、<code>v-else</code>、<code>v-for</code>、<code>v-show</code>、<code>v-html</code>、<code>v-once</code>。
+同时开发者也可以自定义指令，命名规范：<code>v-name</code>。</p>
+<ul>
+<li>为什么叫做指令？
+<ul>
+<li>指令规定了模板应该按照怎样的逻辑进行渲染或绑定行为，</li>
+</ul>
+</li>
+</ul>
+<h3 id="v-once">v-once</h3>
+<ul>
+<li>作用：一次插值，永不更新。使用 <code>v-once</code> 后会影响整个节点，包括其子节点中的内容也不会被更新。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// 当msg/title发生变化时，插值处的内容不会更新。
+</span><span style="color:#75715e"></span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">p</span> <span style="color:#a6e22e">v</span><span style="color:#f92672">-</span><span style="color:#a6e22e">once</span><span style="color:#f92672">&gt;</span>
+    <span style="color:#a6e22e">这个将不会改变</span><span style="color:#f92672">:</span> {{ <span style="color:#a6e22e">msg</span> }}
+    <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">span</span><span style="color:#f92672">&gt;</span>{{<span style="color:#a6e22e">title</span>}}<span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/span&gt;</span>
+<span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/p&gt;</span>
+</code></pre></div><ul>
+<li>对于不可变的值，考虑不用<code>v-once</code>指令，可以使用全局变量并使用模板字符串语法。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">import</span> {<span style="color:#a6e22e">createApp</span>} <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;vue/dist/vue.esm-bundler&#39;</span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">immutable</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Test&#39;</span>;
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">App</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">      &lt;div&gt;
+</span><span style="color:#e6db74">        </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">immutable</span><span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">      &lt;/div&gt;
+</span><span style="color:#e6db74">    `</span>
+}
+<span style="color:#a6e22e">createApp</span>(<span style="color:#a6e22e">App</span>).<span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#39;#app&#39;</span>);
+</code></pre></div><h3 id="v-html">v-html</h3>
+<ul>
+<li>作用：插值表达式不会解析<code>HTML</code>，会将数据解析为普通文本。若需要输出真实的<code>HTML</code>，需要使用<code>v-html</code>指令。</li>
+<li>不要试图用<code>v-html</code>做子模板，因为在<code>v-html</code>中写入的指令，<code>vue</code>不会进行解析。</li>
+<li>为什么插值表达式不会解析<code>HTML</code>?
+由于插值表达式是<code>js</code>表达式，没有对<code>DOM</code>的操作，所以不会解析为<code>HTML</code>。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">p</span><span style="color:#f92672">&gt;</span><span style="color:#a6e22e">Using</span> <span style="color:#a6e22e">mustaches</span><span style="color:#f92672">:</span> {{ <span style="color:#a6e22e">rawHtml</span> }}<span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/p&gt;</span>
+<span style="color:#f92672">&lt;</span><span style="color:#a6e22e">p</span><span style="color:#f92672">&gt;</span><span style="color:#a6e22e">Using</span> <span style="color:#a6e22e">v</span><span style="color:#f92672">-</span><span style="color:#a6e22e">html</span> <span style="color:#a6e22e">directive</span><span style="color:#f92672">:</span> <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">span</span> <span style="color:#a6e22e">v</span><span style="color:#f92672">-</span><span style="color:#a6e22e">html</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rawHtml&#34;</span><span style="color:#f92672">&gt;&lt;</span><span style="color:#960050;background-color:#1e0010">/span&gt;&lt;/p&gt;</span>
+</code></pre></div><h4 id="v-html-和-xss攻击">v-html 和 xss攻击</h4>
+<p>不要把用户提供的值直接作为<code>v-html</code>的内容，这种插值可能会引起<code>XSS</code>攻击。虽然<code>HTML5</code>防御了部分常见的<code>xss</code>攻击，但是并不完全。</p>
+<ul>
+<li><code>input</code>输入<code>&lt;script&gt;alert('1')&lt;/script&gt;</code>不会生效，<code>html5</code>做了优化。</li>
+<li><code>&lt;img src=&quot;/12&quot; onerror=&quot;&quot;&gt;</code>依然可以进行<code>xss</code>攻击。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">import</span> {<span style="color:#a6e22e">createApp</span>} <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;vue/dist/vue.esm-bundler&#39;</span>
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">App</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">data</span>() {
+        <span style="color:#66d9ef">return</span> {
+            <span style="color:#a6e22e">inputVal</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;alert(&#39;</span><span style="color:#ae81ff">1</span><span style="color:#e6db74">&#39;)&#39;</span>
+        }
+    },
+    <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`
+</span><span style="color:#e6db74">      &lt;p&gt;{{inputVal}}&lt;/p&gt;
+</span><span style="color:#e6db74">      &lt;img src=&#34;/1231&#34; :onerror=&#34;inputVal&#34;/&gt;
+</span><span style="color:#e6db74">    `</span>
+
+}
+<span style="color:#a6e22e">createApp</span>(<span style="color:#a6e22e">App</span>).<span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#39;#app&#39;</span>);
+
+</code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 臭屁泽泽的博客
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.4.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#三webpack配置vue23">（三）webpack配置vue2/3</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#四初识vue">（四）初识vue</a>
+      <ul>
+        <li><a href="#vue核心思想">vue核心思想</a></li>
+        <li><a href="#vue简单使用示例">vue简单使用示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#vue组件化构建">Vue组件化构建</a></li>
+    <li><a href="#应用实例组件实例与根组件实例">应用实例、组件实例与根组件实例</a>
+      <ul>
+        <li><a href="#应用组件">应用组件</a></li>
+        <li><a href="#根组件实例">根组件实例</a></li>
+        <li><a href="#组件实例">组件实例</a></li>
+      </ul>
+    </li>
+    <li><a href="#认识及实现mvc">认识及实现MVC</a>
+      <ul>
+        <li><a href="#mvc">MVC</a></li>
+        <li><a href="#手写实现mvc">手写实现MVC</a></li>
+      </ul>
+    </li>
+    <li><a href="#认识mustache与vue编译">认识Mustache与Vue编译</a>
+      <ul>
+        <li><a href="#模板语法">模板语法</a></li>
+        <li><a href="#插值表达式">插值表达式</a></li>
+        <li><a href="#mustache解析插值表达式库">Mustache解析插值表达式库</a></li>
+      </ul>
+    </li>
+    <li><a href="#认识vue内部指令">认识Vue内部指令</a>
+      <ul>
+        <li><a href="#指令概念">指令概念</a></li>
+        <li><a href="#v-once">v-once</a></li>
+        <li><a href="#v-html">v-html</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

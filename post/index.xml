@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on 臭屁泽泽的博客</title>
+    <link>https://luoxy0518.github.io/post/</link>
+    <description>Recent content in Posts on 臭屁泽泽的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://luoxy0518.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://luoxy0518.github.io/post/test/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://luoxy0518.github.io/post/test/</guid>
+      <description>（三）webpack配置vue2/3 初始化webpack包环境 mkdir vue-webpack-demo npm init -y yarn add webpack@4.44.2 webpack-cli@3.3.12 webpack-dev-server@3.11.2 -D // package.json 修改yarn run dev对应的node命令 &amp;quot;scripts&amp;quot;: { &amp;quot;dev&amp;quot;: &amp;quot;webpack-dev-server&amp;quot;, } 建立入口文件，出口文件  建立src/main.js文件作为入口文件 建立public/index.html文件作为模板文件，嵌入vue cdn  &amp;lt;!-public/index.html-!&amp;gt; &amp;lt;!doctype html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;meta name=&amp;#34;viewport&amp;#34; content=&amp;#34;width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0&amp;#34;&amp;gt; &amp;lt;meta http-equiv=&amp;#34;X-UA-Compatible&amp;#34; content=&amp;#34;ie=edge&amp;#34;&amp;gt; &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;div id=&amp;#34;root&amp;#34;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;script src=&amp;#34;https://cdn.bootcdn.net/ajax/libs/vue/3.2.0-beta.7/vue.cjs.min.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 安装vue有关包 // vue3版本 yarn add vue-loader@next @vue/compiler-sfc vue-template-compiler html-webpack-plugin@4.5.0 -D vue2版本需要降低vue-loader版本，上述配置支持vue3。测试项目可以自己搭建webpack，生产环境建议使用脚手架工具。
+ vue2: npm i vue-loader -D vue3: npm i vue-loader@next -D  配置webpack.</description>
+    </item>
+    
+  </channel>
+</rss>
